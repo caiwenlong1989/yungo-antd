@@ -15,13 +15,20 @@ function initTotalList(columns) {
 class StandardTable extends PureComponent {
   constructor(props) {
     super(props);
-    const { columns } = props;
+    const { columns, showRowNum = true } = props;
     const needTotalList = initTotalList(columns);
 
     this.state = {
       selectedRowKeys: [],
       needTotalList,
     };
+
+    if (showRowNum) {
+      columns.unshift({
+        title: '序号',
+        dataIndex: 'rownum',
+      });
+    }
   }
 
   static getDerivedStateFromProps(nextProps) {
@@ -80,6 +87,16 @@ class StandardTable extends PureComponent {
         disabled: record.disabled,
       }),
     };
+
+    const { showRowNum = true } = this.props;
+    if (showRowNum) {
+      const { pageSize, current } = pagination;
+      let rownum = pageSize * (current - 1) + 1;
+      list.forEach(record => {
+        record.rownum = rownum;
+        rownum += 1;
+      });
+    }
 
     return (
       <div className={styles.standardTable}>
