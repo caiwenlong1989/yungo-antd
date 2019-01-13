@@ -63,12 +63,15 @@ function getRule(req, res, u) {
     pageSize = params.pageSize * 1;
   }
 
+  let total = dataSource.length;
+  let current = parseInt(params.currentPage, 10) || 1;
+  dataSource = dataSource.slice(pageSize * (current - 1), pageSize * current);
   const result = {
     list: dataSource,
     pagination: {
-      total: dataSource.length,
+      total: total,
       pageSize,
-      current: parseInt(params.currentPage, 10) || 1,
+      current: current,
     },
   };
 
